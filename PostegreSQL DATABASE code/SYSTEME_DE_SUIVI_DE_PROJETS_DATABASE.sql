@@ -51,8 +51,9 @@ CREATE TABLE IF NOT EXISTS project (
 	date_de_debut DATE NOT NULL,
 	date_de_fin DATE NOT NULL,
 	montant FLOAT
+	FOREIGN KEY (index_role) REFERENCES organisme (code)
 );
-/*table phase */
+/*table phase this table is the code block fo the broject table the broject table contains multible phase */
 CREATE TABLE IF NOT EXISTS Phase (
 	
 	code serial PRIMARY KEY,
@@ -67,7 +68,7 @@ CREATE TABLE IF NOT EXISTS Phase (
 	etat_de_paiement BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-
+/*this table contains all the document in relation with a perticaler phase or a hole project*/
 CREATE TABLE IF NOT EXISTS Documents (
 	
 	index_document serial PRIMARY KEY,
@@ -79,7 +80,7 @@ CREATE TABLE IF NOT EXISTS Documents (
 	FOREIGN KEY (phase_code) REFERENCES Phase (code) ON DELETE CASCADE,
 	FOREIGN KEY (project_code) REFERENCES project (code) ON DELETE CASCADE
 );
-
+/*this table contains the informations nesecairy so we can ship the project to its owner*/
 CREATE TABLE IF NOT EXISTS Livrable (
 	
 	code serial PRIMARY KEY,
@@ -89,4 +90,34 @@ CREATE TABLE IF NOT EXISTS Livrable (
 	nom_du_contact varchar(255) NOT NULL,
 	project_code integer NOT NULL,
 	FOREIGN KEY (project_code) REFERENCES project (code) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS user_phase (
+	user_code integer NOT NULL,
+	phase_code integer NOT NULL,
+	FOREIGN KEY (user_code) REFERENCES Utilisateur (code),
+	FOREIGN KEY (phase_code) REFERENCES Phase (code),
+	  PRIMARY KEY (user_code, phase_code)
+	
+);
+
+
+CREATE TABLE IF NOT EXISTS user_project (
+	user_code integer NOT NULL,
+	project_code integer NOT NULL,
+	FOREIGN KEY (user_code) REFERENCES Utilisateur (code),
+	FOREIGN KEY (project_code) REFERENCES project (code),
+	  PRIMARY KEY (user_code, project_code)
+	
+);
+
+
+CREATE TABLE IF NOT EXISTS organisme (
+	code serial PRIMARY KEY,
+	nom varchar(255) NOT NULL,
+	adresse varchar(255) NOT NULL,
+	phone varchar(255) NOT NULL unique,
+	email varchar(255) NOT NULL unique,
+	nom_du_contact varchar(255) NOT NULL,
+	adresse_web varchar(255)
 );
