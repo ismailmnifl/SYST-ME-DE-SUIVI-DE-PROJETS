@@ -77,8 +77,11 @@ CREATE TABLE IF NOT EXISTS Documents (
 	lien varchar(255),
 	phase_code integer default null,
 	project_code integer default null,
+	livrable_code integer default null,
 	FOREIGN KEY (phase_code) REFERENCES Phase (code) ON DELETE CASCADE,
-	FOREIGN KEY (project_code) REFERENCES project (code) ON DELETE CASCADE
+	FOREIGN KEY (project_code) REFERENCES project (code) ON DELETE CASCADE,
+	FOREIGN KEY (livrable_code) REFERENCES Livrable (code) ON DELETE CASCADE,
+	
 );
 /*this table contains the informations nesecairy so we can ship the project to its owner*/
 CREATE TABLE IF NOT EXISTS Livrable (
@@ -121,3 +124,13 @@ CREATE TABLE IF NOT EXISTS organisme (
 	nom_du_contact varchar(255) NOT NULL,
 	adresse_web varchar(255)
 );
+
+
+
+
+/*mdification*/
+ALTER TABLE documents 
+ADD COLUMN livrable_code integer not null;
+ALTER TABLE documents
+    ADD CONSTRAINT fk_orders_livrable FOREIGN KEY (livrable_code) REFERENCES Livrable (code);
+	
